@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>گزارش کاربردی Sentry برای صاحبان کسب‌وکار</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1d29;
+    --ink-soft: #3d4256;
+    --muted: #6b7180;
+    --paper: #ffffff;
+    --cream: #faf8f3;
+    --accent: #6b3aa0;
+    --accent-soft: #f3edfa;
+    --rule: #e5e3dc;
+    --danger: #c2410c;
+    --success: #166534;
+    --warning: #b45309;
+    --code-bg: #f5f3ee;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 15px; }
+
+  body {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.85;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 60px 70px;
+    min-height: 100vh;
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+
+  /* ---------- HEADER ---------- */
+  .cover {
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 36px;
+    margin-bottom: 48px;
+  }
+  .cover .eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .cover h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .cover .subtitle {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    font-weight: 400;
+    max-width: 560px;
+  }
+  .cover .meta {
+    display: flex;
+    gap: 28px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .cover .meta span strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- SECTIONS ---------- */
+  section { margin-bottom: 56px; }
+
+  h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  h2 .num {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-top: 28px;
+    margin-bottom: 12px;
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+
+  p { margin-bottom: 14px; color: var(--ink-soft); text-align: justify; }
+  p strong { color: var(--ink); font-weight: 700; }
+
+  /* ---------- INTRO BOX ---------- */
+  .intro-box {
+    background: var(--cream);
+    border-right: 4px solid var(--accent);
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+  }
+  .intro-box p:last-child { margin-bottom: 0; }
+
+  /* ---------- FEATURE LIST ---------- */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 22px 0;
+  }
+  .feature {
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+    border-radius: 6px;
+    background: var(--paper);
+  }
+  .feature .label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .feature .title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+  .feature .desc {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  /* ---------- IMAGE PLACEHOLDER ---------- */
+  .figure {
+    margin: 28px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .figure img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    display: block;
+  }
+  .figure figcaption {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+    font-style: italic;
+  }
+  .figure figcaption strong { color: var(--ink); font-style: normal; }
+
+  /* ---------- ANALYSIS BLOCK ---------- */
+  .analysis {
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 22px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .analysis h4 {
+    margin-top: 0;
+    color: var(--accent);
+    border-bottom: 1px solid rgba(107, 58, 160, 0.2);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+  .analysis ul { padding-right: 22px; }
+  .analysis li {
+    margin-bottom: 10px;
+    color: var(--ink-soft);
+    line-height: 1.75;
+  }
+  .analysis li strong { color: var(--ink); }
+
+  /* ---------- TABLE ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.9rem;
+  }
+  th {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    text-align: right;
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  tr:nth-child(even) td { background: var(--cream); }
+
+  /* ---------- BUSINESS IMPACT ---------- */
+  .impact-box {
+    border: 2px solid var(--ink);
+    padding: 22px 26px;
+    margin: 20px 0;
+    background: #fefcf6;
+    page-break-inside: avoid;
+  }
+  .impact-box .impact-title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .impact-box .impact-title::before {
+    content: "★";
+    color: var(--accent);
+    font-size: 1.3rem;
+  }
+
+  /* ---------- INLINE CODE ---------- */
+  code {
+    font-family: 'Courier New', monospace;
+    background: var(--code-bg);
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    color: var(--danger);
+    direction: ltr;
+    display: inline-block;
+  }
+
+  /* ---------- METRIC PILL ---------- */
+  .metric-row {
+    display: flex;
+    gap: 14px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .metric {
+    flex: 1;
+    min-width: 160px;
+    border: 1px solid var(--rule);
+    padding: 14px 18px;
+    border-radius: 6px;
+    text-align: center;
+    background: var(--paper);
+  }
+  .metric .value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1.2;
+  }
+  .metric .label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 2px solid var(--ink);
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ---------- PRINT RULES ---------- */
+  @media print {
+    html { font-size: 11pt; }
+    body { background: white; }
+    .page {
+      box-shadow: none;
+      padding: 0;
+      max-width: 100%;
+    }
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    section { page-break-inside: auto; }
+    h2, h3 { page-break-after: avoid; }
+    .figure, .analysis, .impact-box, .feature { page-break-inside: avoid; break-inside: avoid; }
+    .figure img { max-height: 90vh; object-fit: contain; }
+
+    /* hint: keep section openers with their first paragraph */
+    section > h2 + p, section > h2 + .intro-box { page-break-before: avoid; }
+
+    .cover { page-break-after: always; }
+    .toc-section { page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ========== SECTION 1: WHAT IS SENTRY ========== -->
+  <section>
+    <h2><span class="num">۰۱</span> Sentry چیست؟</h2>
+
+    <div class="intro-box">
+      <p>
+        <strong>Sentry یک پلتفرم پایش خطا و عملکرد (Error & Performance Monitoring) است</strong>
+        که به صورت لحظه‌ای (Real-time) به تیم فنی شما اطلاع می‌دهد:
+        چه خطایی، در کجای کد، برای چه کاربری، چند بار، و دقیقاً تحت چه شرایطی اتفاق افتاده است.
+      </p>
+    </div>
+
+    <p>
+      تصور کنید مشتری شما در حال پرداخت آنلاین رزرو هتل است و ناگهان صفحه ارور می‌دهد.
+      مشتری فقط می‌بیند که «چیزی کار نکرد» و سایت را می‌بندد. شما هیچ‌وقت نمی‌فهمید
+      که این اتفاق افتاد، تا اینکه مشتری شکایت کند یا — بدتر از آن — به سراغ رقیب برود.
+      Sentry دقیقاً همان لحظه‌ای که این خطا رخ می‌دهد، با جزئیات کامل به تیم شما گزارش می‌دهد.
+    </p>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">۰۱ · کاهش ریزش مشتری</span>
+        <div class="title">خطاها قبل از شکایت پیدا می‌شوند</div>
+        <div class="desc">
+          آمارها نشان می‌دهد فقط ۱ نفر از هر ۲۶ مشتری ناراضی شکایت می‌کند. ۲۵ نفر دیگر فقط می‌روند.
+          Sentry به شما اجازه می‌دهد خطا را قبل از اینکه به اعتبار برندتان آسیب بزند، رفع کنید.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۲ · جلوگیری از کاهش درآمد</span>
+        <div class="title">یافتن باگ‌های مسیر پرداخت</div>
+        <div class="desc">
+          اگر در فرآیند callBack درگاه پرداخت خطایی رخ بدهد، یعنی پول مشتری کم شده اما رزرو ثبت نشده.
+          این یعنی استرداد، پشتیبانی پرهزینه و از دست رفتن اعتماد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۳ · افزایش سرعت سایت</span>
+        <div class="title">شناسایی کوئری‌های کند</div>
+        <div class="desc">
+          هر ۱ ثانیه تأخیر در بارگذاری صفحه به طور میانگین ۷٪ نرخ تبدیل را کاهش می‌دهد.
+          Sentry دقیقاً نشان می‌دهد کدام صفحه‌ها کند هستند و چرا.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۴ · شفافیت برای مدیر</span>
+        <div class="title">داشبورد سلامت محصول</div>
+        <div class="desc">
+          بدون نیاز به دانش فنی می‌توانید روند کلی سلامت سایت را ببینید: تعداد خطاها در حال کم شدن
+          است؟ کدام بخش بیشترین مشکل را دارد؟ تیم فنی روی چه چیزی کار می‌کند؟
+        </div>
+      </div>
+    </div>
+
+    <h3>قابلیت‌های اصلی Sentry</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 28%;">قابلیت</th>
+          <th>ارزش برای کسب‌وکار</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Error Tracking</strong></td>
+          <td>ثبت تمام خطاهای backend و frontend با Stack Trace کامل</td>
+        </tr>
+        <tr>
+          <td><strong>Performance Monitoring</strong></td>
+          <td>اندازه‌گیری زمان پاسخ هر API و صفحه (P50, P95, P99)</td>
+        </tr>
+        <tr>
+          <td><strong>Release Tracking</strong></td>
+          <td>تشخیص اینکه آیا آخرین به‌روزرسانی، خطای جدیدی ایجاد کرده است یا نه</td>
+        </tr>
+        <tr>
+          <td><strong>Alerts</strong></td>
+          <td>ارسال خودکار هشدار به تیم در ایمیل، Slack یا تلگرام هنگام بروز خطای جدی</td>
+        </tr>
+        <tr>
+          <td><strong>User Context</strong></td>
+          <td>نمایش اطلاعات کاربر (مرورگر، شهر، شماره مشتری) که خطا برایش رخ داده</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ========== SECTION 2: IMAGE 1 - ISSUES ========== -->
+  <section>
+    <h2><span class="num">۰۲</span> تصویر اول: صفحه Issues (مدیریت خطاها)</h2>
+
+    <p>
+      این صفحه قلب Sentry است. تمام خطاهایی که در ۱۴ روز گذشته در سایت
+       رخ داده، اینجا فهرست شده‌اند.
+      در حال حاضر <strong>۸۶ خطا </strong> روی این پروژه ثبت است.
+    </p>
+
+    <figure class="figure">
+      <img src="Sentry-1.png" alt="صفحه Issues در Sentry">
+      <figcaption><strong>تصویر ۱.</strong> لیست خطاهای  پروژه </figcaption>
+    </figure>
+
+    <h3>قابلیت‌های Sentry که در این صفحه استفاده شده‌اند</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">گروه‌بندی هوشمند</span>
+        <div class="title">Issue Grouping</div>
+        <div class="desc">
+          Sentry خطاهای مشابه را به‌جای نمایش جداگانه، یک «Issue» در نظر می‌گیرد و فقط می‌گوید
+          چند بار تکرار شده. (مثلاً ۵۵۲ رخداد در یک خط.)
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">دسته‌بندی وضعیت</span>
+        <div class="title">Unresolved / For Review / Ignored</div>
+        <div class="desc">
+          تیم می‌تواند خطاها را به‌سرعت اولویت‌بندی کند: کدام نیاز به بررسی فوری دارد،
+          کدام رفع شده، کدام بی‌اهمیت است.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">برچسب «New Issue»</span>
+        <div class="title">تشخیص خطاهای جدید</div>
+        <div class="desc">
+          خطاهایی که برای اولین بار اتفاق افتاده‌اند با برچسب زرد مشخص می‌شوند —
+          معمولاً نشانه‌ای از یک رلیز معیوب یا تغییر تازه.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">First Seen / Last Seen</span>
+        <div class="title">زمان‌بندی رخداد</div>
+        <div class="desc">
+          هر خطا تاریخ اولین و آخرین رخداد دارد (مثل <code>53min ago | 53min old</code>).
+          این کمک می‌کند تشخیص دهیم مشکل تازه است یا قدیمی.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">نمودار 24h/14d</span>
+        <div class="title">Event Frequency Graph</div>
+        <div class="desc">
+          نمودار کوچک کنار هر خطا روند تکرار را نشان می‌دهد — آیا خطا در حال افزایش است
+          یا تک‌رخداد بوده.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Events & Users</span>
+        <div class="title">شمارش رخداد و کاربران درگیر</div>
+        <div class="desc">
+          تعداد دفعات رخداد + تعداد کاربران متأثر. این به اولویت‌بندی کمک می‌کند:
+          خطایی که ۵۰۰ بار رخ داده و ۳۰۰ کاربر را تحت تأثیر قرار داده، فوری‌تر از خطایی
+          است که ۵۰۰ بار برای یک کاربر تکرار شده.
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-box">
+      <div class="impact-title">تأثیر مستقیم بر کسب‌وکار</div>
+      <p style="margin: 0;">
+        بدون Sentry، آن ۵۹ خطای <code>callBack</code> پرداخت احتمالاً تا روزها یا هفته‌ها
+        ناشناخته باقی می‌ماند و هر کدام می‌توانست به معنی یک رزرو از دست رفته باشد.
+        با میانگین ارزش رزرو هتل، حتی نجات ۱۰٪ از این تراکنش‌ها می‌تواند هزینه سالانه
+        Sentry را چندین برابر جبران کند.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 3: IMAGE 2 - PERFORMANCE ========== -->
+  <section>
+    <h2><span class="num">۰۳</span> تصویر دوم: صفحه Performance (پایش عملکرد)</h2>
+
+    <p>
+      این صفحه به سؤال مهم پاسخ می‌دهد: «سایت ما چقدر سریع است؟»
+      Sentry نه‌فقط خطاها، بلکه <strong>کندی</strong> را هم پایش می‌کند —
+      چون کندی یعنی مشتری از دست رفته، حتی وقتی هیچ ارور قرمزی هم نمایش داده نشود.
+    </p>
+
+    <figure class="figure">
+      <img src="Sentry-2.png" alt="صفحه Performance در Sentry">
+      <figcaption><strong>تصویر ۲.</strong> داشبورد Performance · بخش Backend</figcaption>
+    </figure>
+
+    <div class="metric-row">
+      <div class="metric">
+        <span class="value">0.956</span>
+        <span class="label">Apdex (رضایت کاربر)</span>
+      </div>
+      <div class="metric">
+        <span class="value">26.32</span>
+        <span class="label">تراکنش در دقیقه</span>
+      </div>
+      <div class="metric">
+        <span class="value">1%</span>
+        <span class="label">نرخ شکست</span>
+      </div>
+    </div>
+
+    <h3>قابلیت‌های Sentry که در این صفحه استفاده شده‌اند</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">Performance Monitoring</span>
+        <div class="title">پایش عملکرد APMای</div>
+        <div class="desc">
+          نقشه کامل کارایی همه endpointها، Job‌ها و کوئری‌ها — مثل ابزارهای APM گران‌قیمتی
+          مانند New Relic، اما درون همان Sentry.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Slow Ops Detector</span>
+        <div class="title">شناسایی خودکار تراکنش‌های کند</div>
+        <div class="desc">
+          Sentry به‌صورت خودکار تراکنش‌های کند HTTP و DB را پیدا و پیشنهاد می‌دهد.
+          نیازی نیست تیم خودش بگردد دنبال نقاط ضعف.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Apdex Score</span>
+        <div class="title">شاخص رضایت از سرعت</div>
+        <div class="desc">
+          یک عدد ساده بین ۰ تا ۱ که می‌توانید در گزارش‌های مدیریتی به‌عنوان KPI سلامت محصول
+          استفاده کنید.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">P50 / P95 / P99</span>
+        <div class="title">صدک‌های زمان پاسخ</div>
+        <div class="desc">
+          چرا میانگین گمراه‌کننده است: ممکن است میانگین ۱۰۰ms باشد، اما ۵٪ کاربران
+          ۳ ثانیه صبر کنند. صدک‌ها این تجربه واقعی را نشان می‌دهند.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Failure Rate</span>
+        <div class="title">نرخ شکست در زمان</div>
+        <div class="desc">
+          درصد درخواست‌هایی که با خطا تمام می‌شوند. اگر این عدد ناگهان جهش کند،
+          تیم باید فوراً بفهمد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Environment Filter</span>
+        <div class="title">جداسازی Frontend / Backend / Mobile</div>
+        <div class="desc">
+          می‌توان عملکرد هر لایه را جداگانه بررسی کرد و فهمید مشکل از سمت سرور است
+          یا مرورگر کاربر.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">TPM Counter</span>
+        <div class="title">Transactions Per Minute</div>
+        <div class="desc">
+          نمایش بار واقعی هر endpoint. به برنامه‌ریزی منابع سرور و مقیاس‌پذیری
+          کمک شایانی می‌کند.
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-box">
+      <div class="impact-title">تأثیر مستقیم بر کسب‌وکار</div>
+      <p style="margin: 0;">
+        ۴۰ ثانیه تأخیر در جستجوی پرواز یعنی نزدیک به ۱۰۰٪ ریزش کاربر در آن مرحله.
+        Sentry کمک می‌کند تیم فنی بداند دقیقاً کجا را باید بهینه کند، نه اینکه ماه‌ها
+        روی بهینه‌سازی صفحاتی کار کند که اصلاً مشکل نداشته‌اند.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 4: IMAGE 3 - TRANSACTION SUMMARY ========== -->
+  <section>
+    <h2><span class="num">۰۴</span> تصویر سوم: جزئیات یک تراکنش (Transaction Summary)</h2>
+
+    <p>
+      وقتی روی یک مسیر خاص — اینجا <code>/properties/{propertyId}/v2/rooms-rates</code> — کلیک می‌کنیم،
+      Sentry یک پروفایل کامل از رفتار آن endpoint در ۱۴ روز گذشته نشان می‌دهد.
+      این صفحه ابزار اصلی تیم فنی برای دیباگ عمیق است.
+    </p>
+
+    <figure class="figure">
+      <img src="Sentry-3.png" alt="صفحه Transaction Summary در Sentry">
+      <figcaption><strong>تصویر ۳.</strong> Transaction Summary برای endpoint نرخ اتاق‌های هتل</figcaption>
+    </figure>
+
+    <h3>قابلیت‌های Sentry که در این صفحه استفاده شده‌اند</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">Transaction Drill-down</span>
+        <div class="title">تحلیل عمیق یک endpoint</div>
+        <div class="desc">
+          از کل به جزء: می‌توانید روی هر مسیر کلیک کنید و تمام رفتار آن را در زمان ببینید،
+          نه فقط یک آمار خلاصه.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Trace ID</span>
+        <div class="title">ردیابی end-to-end</div>
+        <div class="desc">
+          هر تراکنش یک Trace ID دارد. اگر یک درخواست از frontend شروع و در backend ادامه یابد،
+          تمام مسیر را می‌توان پیگیری کرد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Sampled Events</span>
+        <div class="title">نمونه‌های واقعی برای دیباگ</div>
+        <div class="desc">
+          Sentry نمونه‌ای از تراکنش‌های کند را با تمام داده‌های زمینه‌ای ذخیره می‌کند.
+          توسعه‌دهنده دقیقاً می‌بیند چه چیزی رخ داده.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Suspect Spans</span>
+        <div class="title">شناسایی Bottleneck‌ها</div>
+        <div class="desc">
+          هر تراکنش از چند Span (مرحله) تشکیل شده. Sentry می‌گوید کدام مرحله بیشترین زمان
+          را می‌گیرد — مثلاً bootstrap اپلیکیشن یا یک کوئری خاص.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Tag Summary</span>
+        <div class="title">دسته‌بندی بر اساس مرورگر، شهر، نسخه</div>
+        <div class="desc">
+          آیا فقط کاربران Safari کند می‌بینند؟ آیا مشکل خاص یک نسخه از موبایل است؟
+          Tagها این پاسخ‌ها را می‌دهند.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Star for Team</span>
+        <div class="title">پین کردن تراکنش‌های مهم</div>
+        <div class="desc">
+          تراکنش‌های حیاتی کسب‌وکار (مثل پرداخت، رزرو) را می‌توان پین کرد تا همیشه
+          در داشبورد تیم دیده شوند.
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-box">
+      <div class="impact-title">تأثیر مستقیم بر کسب‌وکار</div>
+      <p style="margin: 0;">
+        مسیر «نرخ اتاق هتل» مستقیماً به فرآیند رزرو و درآمد متصل است. اگر این endpoint
+        یک شب کند یا خراب شود، شب بعد کسب‌وکار ضرر مالی قابل توجهی خواهد دید. Sentry
+        با Star و Alert این مسیر، تضمین می‌کند چنین اتفاقی هرگز بدون اطلاع تیم رخ ندهد.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 5: SUMMARY ========== -->
+  <section>
+    <h2><span class="num">۰۵</span> جمع‌بندی · چرا Sentry برای کسب‌وکار شما ضروری است</h2>
+
+    <p>
+      با مرور سه تصویر بالا، Sentry را می‌توان به سه شکل خلاصه کرد که هر سه برای
+      یک صاحب کسب‌وکار قابل لمس هستند:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 32%;">حوزه</th>
+          <th>چه کاری انجام می‌دهد</th>
+          <th style="width: 22%;">معادل آن بدون Sentry</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>پایش خطا</strong></td>
+          <td>هر باگ را قبل از شکایت مشتری پیدا می‌کند</td>
+          <td>منتظر تماس مشتری</td>
+        </tr>
+        <tr>
+          <td><strong>پایش عملکرد</strong></td>
+          <td>کندی‌های پنهان را افشا می‌کند</td>
+          <td>حدس و گمان تیم فنی</td>
+        </tr>
+        <tr>
+          <td><strong>اولویت‌بندی</strong></td>
+          <td>می‌گوید کدام مشکل بیشترین کاربر را اذیت کرده</td>
+          <td>هرکس روی هرچه می‌خواست کار می‌کند</td>
+        </tr>
+        <tr>
+          <td><strong>شفافیت مدیریتی</strong></td>
+          <td>گزارش بصری سلامت محصول</td>
+          <td>گزارش‌های شفاهی تیم</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+</body>
+</html>

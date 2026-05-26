@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>گزارش کاربردی Jira برای صاحبان کسب‌وکار</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1d29;
+    --ink-soft: #3d4256;
+    --muted: #6b7180;
+    --paper: #ffffff;
+    --cream: #faf8f3;
+    --accent: #0052cc;
+    --accent-soft: #e6efff;
+    --rule: #e5e3dc;
+    --danger: #c2410c;
+    --success: #166534;
+    --warning: #b45309;
+    --code-bg: #f5f3ee;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 15px; }
+
+  body {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.85;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 60px 70px;
+    min-height: 100vh;
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+
+  /* ---------- HEADER ---------- */
+  .cover {
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 36px;
+    margin-bottom: 48px;
+  }
+  .cover .eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .cover h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .cover .subtitle {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    font-weight: 400;
+    max-width: 560px;
+  }
+  .cover .meta {
+    display: flex;
+    gap: 28px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+  .cover .meta span strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- SECTIONS ---------- */
+  section { margin-bottom: 56px; }
+
+  h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  h2 .num {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-top: 28px;
+    margin-bottom: 12px;
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+
+  p { margin-bottom: 14px; color: var(--ink-soft); text-align: justify; }
+  p strong { color: var(--ink); font-weight: 700; }
+
+  /* ---------- INTRO BOX ---------- */
+  .intro-box {
+    background: var(--cream);
+    border-right: 4px solid var(--accent);
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+  }
+  .intro-box p:last-child { margin-bottom: 0; }
+
+  /* ---------- FEATURE LIST ---------- */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 22px 0;
+  }
+  .feature {
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+    border-radius: 6px;
+    background: var(--paper);
+  }
+  .feature .label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .feature .title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+  .feature .desc {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  /* ---------- IMAGE PLACEHOLDER ---------- */
+  .figure {
+    margin: 28px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .figure img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    display: block;
+  }
+  .figure figcaption {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+    font-style: italic;
+  }
+  .figure figcaption strong { color: var(--ink); font-style: normal; }
+
+  /* ---------- ANALYSIS BLOCK ---------- */
+  .analysis {
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 22px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .analysis h4 {
+    margin-top: 0;
+    color: var(--accent);
+    border-bottom: 1px solid rgba(0, 82, 204, 0.2);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+  .analysis ul { padding-right: 22px; }
+  .analysis li {
+    margin-bottom: 10px;
+    color: var(--ink-soft);
+    line-height: 1.75;
+  }
+  .analysis li strong { color: var(--ink); }
+
+  /* ---------- TABLE ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.9rem;
+  }
+  th {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    text-align: right;
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  tr:nth-child(even) td { background: var(--cream); }
+
+  /* ---------- BUSINESS IMPACT ---------- */
+  .impact-box {
+    border: 2px solid var(--ink);
+    padding: 22px 26px;
+    margin: 20px 0;
+    background: #fefcf6;
+    page-break-inside: avoid;
+  }
+  .impact-box .impact-title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .impact-box .impact-title::before {
+    content: "★";
+    color: var(--accent);
+    font-size: 1.3rem;
+  }
+
+  /* ---------- INLINE CODE ---------- */
+  code {
+    font-family: 'Courier New', monospace;
+    background: var(--code-bg);
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    color: var(--danger);
+    direction: ltr;
+    display: inline-block;
+  }
+
+  /* ---------- METRIC PILL ---------- */
+  .metric-row {
+    display: flex;
+    gap: 14px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .metric {
+    flex: 1;
+    min-width: 140px;
+    border: 1px solid var(--rule);
+    padding: 14px 18px;
+    border-radius: 6px;
+    text-align: center;
+    background: var(--paper);
+  }
+  .metric .value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1.2;
+  }
+  .metric .label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+    display: block;
+  }
+  .metric.danger .value { color: #c2410c; }
+  .metric.warn .value { color: #b45309; }
+  .metric.ok .value { color: #166534; }
+
+  /* ---------- STATUS BADGE ---------- */
+  .status {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .status.red { background: #fee2e2; color: #991b1b; }
+  .status.green { background: #dcfce7; color: #166534; }
+  .status.yellow { background: #fef3c7; color: #92400e; }
+  .status.blue { background: #dbeafe; color: #1e40af; }
+  .status.purple { background: #ede9fe; color: #5b21b6; }
+
+  /* ---------- FOOTER ---------- */
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 2px solid var(--ink);
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ---------- PRINT RULES ---------- */
+  @media print {
+    html { font-size: 11pt; }
+    body { background: white; }
+    .page {
+      box-shadow: none;
+      padding: 0;
+      max-width: 100%;
+    }
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    section { page-break-inside: auto; }
+    h2, h3 { page-break-after: avoid; }
+    .figure, .analysis, .impact-box, .feature { page-break-inside: avoid; break-inside: avoid; }
+    .figure img { max-height: 90vh; object-fit: contain; }
+
+    section > h2 + p, section > h2 + .intro-box { page-break-before: avoid; }
+
+    .cover { page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ========== SECTION 1: WHAT IS JIRA ========== -->
+  <section>
+    <h2><span class="num">۰۱</span> Jira چیست؟</h2>
+
+    <div class="intro-box">
+      <p>
+        <strong>Jira یک پلتفرم مدیریت پروژه و کار تیمی است</strong> که توسط Atlassian ساخته شده
+        و در دنیا به استاندارد واقعی مدیریت تیم‌های نرم‌افزاری تبدیل شده است. در Jira هر ایده،
+        درخواست، باگ یا کار به یک «Issue» تبدیل می‌شود — یک کارت دیجیتال که چرخه عمر کامل آن
+        از لحظه پیشنهاد تا تحویل نهایی قابل پیگیری است.
+      </p>
+    </div>
+
+    <p>
+      تشبیه ساده برای صاحب کسب‌وکار: اگر یک رستوران داشته باشید، Jira همان سیستم سفارش‌گیری
+      است که از لحظه ثبت سفارش مشتری تا تحویل غذا، هر مرحله را ثبت می‌کند. می‌دانید چه سفارشاتی
+      در حال آماده‌سازی است، کدام پیشخدمت مسئول کدام میز است، کدام غذاها بیشتر سفارش داده می‌شوند
+      و میانگین زمان آماده‌سازی چقدر است. <strong>بدون این سیستم، آشپزخانه می‌تواند هرج‌ومرج باشد،
+      هرچند آشپزها همگی ماهر باشند.</strong>
+    </p>
+
+    <h3>چرا یک صاحب کسب‌وکار باید به Jira اهمیت بدهد؟</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">۰۱ · شفافیت کامل</span>
+        <div class="title">می‌دانید همه روی چه کاری هستند</div>
+        <div class="desc">
+          به‌جای سؤال‌های مکرر «روی چی کار می‌کنی؟»، یک نگاه به برد Jira نشان می‌دهد
+          هر عضو تیم چه کارهایی در دست دارد و در چه مرحله‌ای است.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۲ · مدیریت اولویت‌ها</span>
+        <div class="title">هیچ کاری گم نمی‌شود</div>
+        <div class="desc">
+          هر ایده‌ای که در جلسات مطرح می‌شود به یک Issue تبدیل می‌گردد. مدیر می‌تواند
+          اولویت‌بندی کند و مطمئن باشد چیزی فراموش نخواهد شد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۳ · تحویل قابل پیش‌بینی</span>
+        <div class="title">تخمین واقع‌بینانه از زمان تحویل</div>
+        <div class="desc">
+          با تحلیل سرعت تیم در Sprintهای گذشته (Velocity)، می‌توان زمان تحویل فیچرهای
+          آینده را با دقت قابل قبولی پیش‌بینی کرد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۴ · پاسخگویی</span>
+        <div class="title">هر کاری یک مسئول مشخص دارد</div>
+        <div class="desc">
+          در Jira هر Issue یک Assignee دارد. این یعنی هر کار «صاحب» مشخص دارد و
+          فرهنگ پاسخگویی در تیم ساخته می‌شود.
+        </div>
+      </div>
+    </div>
+
+    <h3>قابلیت‌های اصلی Jira</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 28%;">قابلیت</th>
+          <th>ارزش برای کسب‌وکار</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Issue Tracking</strong></td>
+          <td>ثبت و پیگیری تسک، باگ، فیچر، استوری و حماسه (Epic)</td>
+        </tr>
+        <tr>
+          <td><strong>Scrum / Kanban Boards</strong></td>
+          <td>نمایش بصری جریان کار به سبک‌های مختلف چابک</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint Planning</strong></td>
+          <td>برنامه‌ریزی دوره‌های ۲ هفته‌ای کار با اهداف مشخص</td>
+        </tr>
+        <tr>
+          <td><strong>Backlog Management</strong></td>
+          <td>نگهداری بانک ایده‌ها و کارهای آینده با اولویت‌بندی</td>
+        </tr>
+        <tr>
+          <td><strong>Reports & Analytics</strong></td>
+          <td>گزارش‌های آماده برای تحلیل عملکرد و پیش‌بینی</td>
+        </tr>
+        <tr>
+          <td><strong>Workflows</strong></td>
+          <td>تعریف فرآیند سفارشی برای هر نوع کار (مثلاً To Do → In Progress → Review → Test → Done)</td>
+        </tr>
+        <tr>
+          <td><strong>Integrations</strong></td>
+          <td>اتصال به GitLab، Slack، Confluence و صدها ابزار دیگر</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ========== SECTION 2: IMAGE 1 - DASHBOARD ========== -->
+  <section>
+    <h2><span class="num">۰۲</span> تصویر اول: System Dashboard (داشبورد اصلی)</h2>
+
+    <p>
+      این اولین صفحه‌ای است که هر کاربر هنگام ورود به Jira می‌بیند. ترکیبی از کارهای اختصاص
+      یافته به کاربر، اخبار اخیر و فعالیت تیم. به‌نوعی «صبحانه خبری» هر روز کاربر است.
+    </p>
+
+    <figure class="figure">
+      <img src="Jira-1.png" alt="داشبورد اصلی Jira">
+      <figcaption><strong>تصویر ۱.</strong> System Dashboard با ویجت‌های Assigned to Me و Activity Stream</figcaption>
+    </figure>
+
+    <div class="metric-row">
+      <div class="metric danger">
+        <span class="value">202</span>
+        <span class="label">Issue اختصاص‌یافته به کاربر</span>
+      </div>
+      <div class="metric warn">
+        <span class="value">73</span>
+        <span class="label">اعلان (Notification)</span>
+      </div>
+      <div class="metric">
+        <span class="value">10</span>
+        <span class="label">نمایش در صفحه فعلی</span>
+      </div>
+    </div>
+
+    <h3>قابلیت‌های Jira که در این صفحه دیده می‌شوند</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">Customizable Dashboard</span>
+        <div class="title">داشبورد قابل شخصی‌سازی</div>
+        <div class="desc">
+          هر کاربر می‌تواند ویجت‌های مورد نیازش را به داشبورد اضافه کند: Assigned to Me،
+          Activity Stream، Sprint Health، Filter Results و...
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Assigned to Me Widget</span>
+        <div class="title">کارهای من</div>
+        <div class="desc">
+          فهرست تمام Issueهایی که به کاربر اختصاص یافته. مرتب‌شده بر اساس اولویت یا تاریخ.
+          نقطه شروع روزانه هر کاربر.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Activity Stream</span>
+        <div class="title">جریان فعالیت تیم</div>
+        <div class="desc">
+          هر تغییری در پروژه (کامنت جدید، تغییر وضعیت، Issue جدید) لحظه‌ای ثبت می‌شود.
+          تاریخچه زنده تیم.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Comment Threading</span>
+        <div class="title">گفت‌وگوهای ساختاریافته</div>
+        <div class="desc">
+          کامنت‌ها روی هر Issue ثبت می‌شوند. می‌توان نام افراد را @mention کرد تا اعلان
+          دریافت کنند.
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-box">
+      <div class="impact-title">تأثیر مستقیم بر کسب‌وکار</div>
+      <p style="margin: 0;">
+        ۲۰۲ Issue اختصاص‌یافته به یک کاربر یعنی <strong>گردنه فشار</strong> (Bottleneck) در تیم.
+        اگر این کاربر کلیدی بیمار شود، مرخصی برود، یا حتی فقط مرور ایمیلش طول بکشد، ۲۰۲ کار
+        به‌نوعی متوقف می‌شوند. مدیر باید این بار را بازتوزیع کند تا ریسک کسب‌وکار کاهش یابد.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 3: IMAGE 2 - SCRUM BOARD ========== -->
+  <section>
+    <h2><span class="num">۰۳</span> تصویر دوم: Scrum Board (تخته اسکرام · Hotel Sprint35)</h2>
+
+    <p>
+      این برد، مهم‌ترین ابزار روزانه تیم است. هر Sprint (دوره معمولاً ۲ هفته‌ای) با چنین بردی
+      اجرا می‌شود. کارت‌ها از چپ به راست در ستون‌های مختلف حرکت می‌کنند و در نهایت به ستون
+      Done می‌رسند.
+    </p>
+
+    <figure class="figure">
+      <img src="Jira-2.png" alt="Scrum Board در Jira">
+      <figcaption><strong>تصویر ۲.</strong> برد اسکرام Hotel Sprint35 با ۵ مرحله جریان کار</figcaption>
+    </figure>
+
+    <div class="metric-row">
+      <div class="metric warn">
+        <span class="value">5</span>
+        <span class="label">روز باقیمانده Sprint</span>
+      </div>
+      <div class="metric">
+        <span class="value">5</span>
+        <span class="label">ستون جریان کار</span>
+      </div>
+      <div class="metric">
+        <span class="value">7</span>
+        <span class="label">فیلتر سریع فعال</span>
+      </div>
+    </div>
+
+    <h3>قابلیت‌های Jira که در این صفحه استفاده شده‌اند</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">Scrum Board</span>
+        <div class="title">تخته اسکرام بصری</div>
+        <div class="desc">
+          نمایش گرافیکی جریان کار. کارت‌ها با drag and drop بین ستون‌ها جابجا می‌شوند.
+          تیم در جلسه روزانه به این برد نگاه می‌کند.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Sprint Goal</span>
+        <div class="title">هدف Sprint</div>
+        <div class="desc">
+          هر Sprint یک هدف مشخص دارد. این کمک می‌کند تیم در پایان Sprint بداند موفق بوده
+          یا نه.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Sprint Timer</span>
+        <div class="title">تایمر شمارش معکوس</div>
+        <div class="desc">
+          نمایش روزهای باقی‌مانده تا پایان Sprint. ابزار روان‌شناختی برای حفظ تمرکز.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Custom Workflow</span>
+        <div class="title">گردش‌کار سفارشی</div>
+        <div class="desc">
+          ستون REVIEW و TEST نشان می‌دهد این تیم گردش‌کاری فراتر از حالت پایه (To Do / Doing / Done)
+          تعریف کرده. مناسب تیم‌های با کنترل کیفیت جدی.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Quick Filters</span>
+        <div class="title">فیلترهای سریع</div>
+        <div class="desc">
+          با یک کلیک می‌توان فیلتر کرد بر اساس فرد، اولویت، وضعیت یا برچسب. مدیر می‌تواند
+          فقط Highest Priority را ببیند.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Parent-Subtask Hierarchy</span>
+        <div class="title">سلسله‌مراتب Issue</div>
+        <div class="desc">
+          هر کار بزرگ به زیرکارهای کوچک‌تر شکسته می‌شود. هر زیرکار قابل تخصیص به یک فرد
+          خاص است. مناسب کارهای چندنفره.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Avatar Assignee</span>
+        <div class="title">آواتار مسئول روی کارت</div>
+        <div class="desc">
+          روی هر کارت آواتار فرد مسئول نمایش داده می‌شود. در یک نگاه می‌توان دید چه کسی
+          روی چه کاری است.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Complete Sprint</span>
+        <div class="title">دکمه پایان Sprint</div>
+        <div class="desc">
+          در پایان دوره، با یک کلیک Sprint بسته می‌شود. Jira به‌صورت خودکار گزارش نهایی
+          (Sprint Report) تولید می‌کند.
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-box">
+      <div class="impact-title">تأثیر مستقیم بر کسب‌وکار</div>
+      <p style="margin: 0;">
+        ستون DONE خالی در ۵ روز مانده به پایان Sprint یک <strong>علامت زرد</strong> است.
+        یا تیم بیش از ظرفیت کار برداشته، یا کارها در مرحله Test/Review گیر کرده‌اند.
+        مدیر می‌تواند با یک نگاه به این برد، سؤال بپرسد: «چه مانعی برای رساندن کارها
+        به Done وجود دارد؟» — همین گفت‌وگو می‌تواند زمان تحویل فیچرها را کوتاه کند.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 4: IMAGE 3 - REPORTS ========== -->
+  <section>
+    <h2><span class="num">۰۴</span> تصویر سوم: All Reports (گزارش‌های جامع)</h2>
+
+    <p>
+      اگر بردها تصویر «همین الان» را نشان می‌دهند، گزارش‌ها تصویر «روند» را می‌سازند.
+      Jira مجموعه‌ای از گزارش‌های آماده دارد که هر کدام به یک سؤال خاص مدیریتی پاسخ می‌دهد:
+      آیا به موقع تحویل می‌دهیم؟ سرعت تیم چقدر است؟ کجا گیر می‌کنیم؟
+    </p>
+
+    <figure class="figure">
+      <img src="Jira-3.png" alt="صفحه All Reports در Jira">
+      <figcaption><strong>تصویر ۳.</strong> فهرست گزارش‌های آماده Agile در Jira</figcaption>
+    </figure>
+
+
+    <h3>قابلیت‌های Jira که در این صفحه دیده می‌شوند</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">Built-in Reports</span>
+        <div class="title">گزارش‌های آماده Agile</div>
+        <div class="desc">
+          ۱۰+ گزارش بدون نیاز به پیکربندی. هر کدام به یک سؤال مدیریتی استاندارد در
+          متدولوژی Agile پاسخ می‌دهد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Velocity Tracking</span>
+        <div class="title">پیگیری سرعت تیم</div>
+        <div class="desc">
+          عددی‌ترین معیار توانمندی تیم. مدیر می‌تواند با اطمینان بگوید: «فیچر X با
+          ۱۲۰ Story Point، حدود ۳ Sprint طول می‌کشد».
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Bottleneck Detection</span>
+        <div class="title">شناسایی گردنه فشار</div>
+        <div class="desc">
+          Cumulative Flow Diagram و Control Chart گردنه‌های فشار را پیدا می‌کنند: کجای
+          فرآیند کار گیر می‌کند؟
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Release Tracking</span>
+        <div class="title">پیگیری نسخه</div>
+        <div class="desc">
+          Version Report و Release Burndown پیش‌بینی می‌کنند نسخه به‌موقع آماده می‌شود
+          یا نه. ابزار حیاتی برای مدیران محصول.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Sprint Retrospective</span>
+        <div class="title">مرور جلسات پایان دوره</div>
+        <div class="desc">
+          Sprint Report ابزار اصلی جلسه Retrospective است: چه چیز خوب بود، چه چیز بد،
+          چه چیز را در Sprint بعد تغییر دهیم.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Switch Report Menu</span>
+        <div class="title">جابجایی بین گزارش‌ها</div>
+        <div class="desc">
+          دکمه «Switch report» امکان جابجایی سریع بین گزارش‌ها بدون بازگشت به فهرست.
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-box">
+      <div class="impact-title">تأثیر مستقیم بر کسب‌وکار</div>
+      <p style="margin: 0;">
+        با Velocity Chart می‌توانید با اطمینان به ذی‌نفعان (سهامداران، مشتریان بزرگ، مدیران
+        ارشد) بگویید: «این فیچر در ۲ ماه آینده آماده می‌شود». این دقت پیش‌بینی، اعتماد
+        می‌سازد. بدون این داده، تخمین‌ها حدسی است و دیر یا زود اعتبار تیم را خدشه‌دار می‌کند.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 5: IMAGE 4 - BACKLOG ========== -->
+  <section>
+    <h2><span class="num">۰۵</span> تصویر چهارم: Backlog (بانک کارهای آینده)</h2>
+
+    <p>
+      Backlog فهرست همه کارهایی است که تیم باید روزی انجام دهد ولی هنوز به یک Sprint
+      تخصیص نیافته. این مهم‌ترین مخزن استراتژیک پروژه است: همه ایده‌ها، باگ‌های گزارش‌شده،
+      درخواست‌های مشتریان و قابلیت‌های آینده اینجا جمع می‌شوند، اولویت‌بندی می‌شوند و در
+      Sprintهای بعد توزیع می‌شوند.
+    </p>
+
+    <figure class="figure">
+      <img src="Jira-4.png" alt="صفحه Backlog در Jira">
+      <figcaption><strong>تصویر ۴.</strong> Backlog فعال Sprint35 با ۱۷ Issue</figcaption>
+    </figure>
+
+    <div class="metric-row">
+      <div class="metric">
+        <span class="value">17</span>
+        <span class="label">Issue در Sprint35</span>
+      </div>
+      <div class="metric">
+        <span class="value">14</span>
+        <span class="label">روز Sprint</span>
+      </div>
+      <div class="metric">
+        <span class="value">7</span>
+        <span class="label">فیلتر سریع</span>
+      </div>
+    </div>
+
+    <h3>قابلیت‌های Jira که در این صفحه استفاده شده‌اند</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">Active Sprint View</span>
+        <div class="title">نمایش Sprint فعال</div>
+        <div class="desc">
+          فهرست همه Issueهای داخل Sprint فعال با تاریخ شروع و پایان. مرجع اصلی برنامه‌ریزی
+          روزانه.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Labels & Tags</span>
+        <div class="title">برچسب‌گذاری موضوعی</div>
+        <div class="desc">
+          برچسب‌های رنگی کاستوم برای دسته‌بندی Issueها بر اساس موضوع، حوزه یا پروژه‌های
+          مرتبط.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Sprint Duration</span>
+        <div class="title">بازه Sprint قابل تنظیم</div>
+        <div class="desc">
+          بازه ۲ هفته (۳ مه تا ۱۷ مه) — استاندارد رایج. می‌توان ۱، ۳ یا ۴ هفته هم تعریف کرد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Sprint Status Bar</span>
+        <div class="title">نوار وضعیت Sprint</div>
+        <div class="desc">
+          نوار سه‌رنگ نشان می‌دهد چند Issue تمام شده، چند در حال انجام، چند مانده. خلاصه
+          بصری در یک نگاه.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Backlog Management</span>
+        <div class="title">مدیریت بک‌لاگ</div>
+        <div class="desc">
+          صفحه Backlog امکان جابجایی Issueها بین Sprintها با drag and drop می‌دهد.
+          ابزار اصلی Sprint Planning.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Assignee Avatars</span>
+        <div class="title">آواتار مسئول هر Issue</div>
+        <div class="desc">
+          آواتار سمت چپ هر ردیف، فرد مسئول را نشان می‌دهد. در نگاه اول می‌توان فهمید بار
+          کاری هر فرد چقدر است.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">Team Roster</span>
+        <div class="title">فهرست اعضای Sprint</div>
+        <div class="desc">
+          ردیف آواتارها در بالای Sprint نشان می‌دهد چه کسانی در این دوره مشارکت دارند.
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-box">
+      <div class="impact-title">تأثیر مستقیم بر کسب‌وکار</div>
+      <p style="margin: 0;">
+        دیدن کارت‌های بدون Assignee در یک Sprint فعال یعنی <strong>کارهای یتیم</strong>.
+        احتمالاً در روزهای پایانی Sprint کسی به آن‌ها نخواهد رسید و به Sprint بعد منتقل
+        می‌شوند. این یعنی تأخیر در تحویل به مشتری. مدیر باید قبل از شروع Sprint مطمئن شود
+        هر Issue صاحب دارد.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 6: SUMMARY ========== -->
+  <section>
+    <h2><span class="num">۰۶</span> جمع‌بندی · چرا Jira برای کسب‌وکار شما ضروری است</h2>
+
+    <p>
+      Jira را می‌توان به چهار ارزش کلیدی برای یک صاحب کسب‌وکار خلاصه کرد:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 32%;">حوزه</th>
+          <th>چه کاری انجام می‌دهد</th>
+          <th style="width: 22%;">معادل آن بدون Jira</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>شفافیت کارها</strong></td>
+          <td>همه می‌دانند چه کسی روی چه چیزی است</td>
+          <td>سؤال‌های مکرر، ابهام</td>
+        </tr>
+        <tr>
+          <td><strong>اولویت‌بندی</strong></td>
+          <td>کارهای مهم همیشه اول دیده می‌شوند</td>
+          <td>کارها بر اساس صدای بلندتر</td>
+        </tr>
+        <tr>
+          <td><strong>پیش‌بینی</strong></td>
+          <td>تخمین دقیق زمان تحویل بر اساس داده</td>
+          <td>تخمین‌های خوش‌بینانه و گمراه</td>
+        </tr>
+        <tr>
+          <td><strong>پاسخگویی</strong></td>
+          <td>هر کار مسئول مشخص دارد</td>
+          <td>«من فکر کردم تو می‌کنی»</td>
+        </tr>
+        <tr>
+          <td><strong>تاریخچه</strong></td>
+          <td>هر تصمیم و گفت‌وگو ذخیره می‌شود</td>
+          <td>دانش با خروج افراد گم می‌شود</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </section>
+
+</div>
+</body>
+</html>

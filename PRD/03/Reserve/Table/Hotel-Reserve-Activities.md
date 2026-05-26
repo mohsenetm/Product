@@ -1,0 +1,36 @@
+# مستندات جدول `hotel_reserve_activities`
+
+## توضیحات
+
+یک ردپای حسابرسی (Audit Trail) **فقط-افزودنی (Append-only)** از هر اقدام (action) یا یادداشتی (comment) که یک اپراتور مرکز تماس روی یک رزرو انجام می‌دهد.  
+هر سطر ثبت می‌کند که *چه کسی، چه کاری را در چه زمانی* انجام داده است، و — اگر آن اقدام باعث تغییر در رزرو شده باشد — *کدام اسنپ‌شات (snapshot) آن تغییر را ثبت کرده است*.
+
+## تصمیمات طراحی
+
+- **فقط-افزودنی (Append-only)** — فقط دارای `created_at` (که از طریق `useCurrent()` تنظیم می‌شود) است و ستون `updated_at` ندارد. فعالیت‌ها هرگز ویرایش یا حذف نمی‌شوند.
+- مقدار `type = 'comment'` نشان‌دهنده یک یادداشت فقط-خواندنی است که جدول `hotel_reserves` را تغییر **نمی‌دهد**. در این حالت مقدار `snapshot_id` برابر با `NULL` خواهد بود.
+- مقدار `type = 'action'` وضعیت رزرو را تغییر می‌دهد (Mutate). پس از بروزرسانی `hotel_reserves` و درج یک سطر جدید در `hotel_reserve_snapshots`، شناسه (`id`) اسنپ‌شات جدید در ستون `snapshot_id` نوشته می‌شود.
+- ستون `template_id` می‌تواند خالی (nullable) باشد و از `onDelete('set null')` استفاده می‌کند — با حذف یک قالب (Template)، رکوردهای تاریخچه فعالیت‌ها حفظ می‌شوند.
+- ستون `users_id` از `onDelete('restrict')` استفاده می‌کند — کاربری که در سیستم فعالیتی ثبت کرده است را نمی‌توان به طور کامل (Hard-delete) حذف کرد.
+
+## ستون‌ها
+
+| نام ستون      | نوع داده        | Null | کلید |
+| :------------ | :-------------- | :--- | :--- |
+| `id`          | bigint unsigned | خیر  | PRI  |
+| `reserve_id`  | bigint unsigned | خیر  | MUL  |
+| `snapshot_id` | bigint unsigned | بله  | MUL  |
+| `users_id`    | bigint unsigned | خیر  | MUL  |
+| `template_id` | bigint unsigned | بله  | MUL  |
+| `type`        | enum            | خیر  |      |
+| `title`       | varchar(255)    | خیر  |      |
+| `description` | text            | خیر  |      |
+| `created_at`  | timestamp       | خیر  |      |
+## روابط
+
+| رابطه | جدول | ستون کلید خارجی | نوع |
+| :--- | :--- | :--- | :--- |
+| belongs to (متعلق به) | `hotel_reserves` | `reserve_id` | چند به یک (Many → One) |
+| belongs to (متعلق به) | `hotel_reserve_snapshots` | `snapshot_id` | چند به یک (Many → One) |
+| belongs to (متعلق به) | `users` | `users_id` | چند به یک (Many → One) |
+| belongs to (متعلق به) | `hotel_reserve_activity_templates` | `template_id` | چند به یک (Many → One) |

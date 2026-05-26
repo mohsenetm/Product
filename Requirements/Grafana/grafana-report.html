@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>گزارش کاربردی Grafana برای صاحبان کسب‌وکار</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1d29;
+    --ink-soft: #3d4256;
+    --muted: #6b7180;
+    --paper: #ffffff;
+    --cream: #faf8f3;
+    --accent: #b8410c;
+    --accent-soft: #fbeee4;
+    --rule: #e5e3dc;
+    --danger: #c2410c;
+    --success: #166534;
+    --warning: #b45309;
+    --code-bg: #f5f3ee;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 15px; }
+
+  body {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.85;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 60px 70px;
+    min-height: 100vh;
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+
+  /* ---------- HEADER ---------- */
+  .cover {
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 36px;
+    margin-bottom: 48px;
+  }
+  .cover .eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .cover h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .cover .subtitle {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    font-weight: 400;
+    max-width: 560px;
+  }
+  .cover .meta {
+    display: flex;
+    gap: 28px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .cover .meta span strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- SECTIONS ---------- */
+  section { margin-bottom: 56px; }
+
+  h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  h2 .num {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-top: 28px;
+    margin-bottom: 12px;
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+
+  p { margin-bottom: 14px; color: var(--ink-soft); text-align: justify; }
+  p strong { color: var(--ink); font-weight: 700; }
+
+  /* ---------- INTRO BOX ---------- */
+  .intro-box {
+    background: var(--cream);
+    border-right: 4px solid var(--accent);
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+  }
+  .intro-box p:last-child { margin-bottom: 0; }
+
+  /* ---------- FEATURE LIST ---------- */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 22px 0;
+  }
+  .feature {
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+    border-radius: 6px;
+    background: var(--paper);
+  }
+  .feature .label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .feature .title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+  .feature .desc {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  /* ---------- IMAGE PLACEHOLDER ---------- */
+  .figure {
+    margin: 28px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .figure img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    display: block;
+  }
+  .figure figcaption {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+    font-style: italic;
+  }
+  .figure figcaption strong { color: var(--ink); font-style: normal; }
+
+  /* ---------- ANALYSIS BLOCK ---------- */
+  .analysis {
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 22px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .analysis h4 {
+    margin-top: 0;
+    color: var(--accent);
+    border-bottom: 1px solid rgba(184, 65, 12, 0.2);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+  .analysis ul { padding-right: 22px; }
+  .analysis li {
+    margin-bottom: 10px;
+    color: var(--ink-soft);
+    line-height: 1.75;
+  }
+  .analysis li strong { color: var(--ink); }
+
+  /* ---------- TABLE ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.9rem;
+  }
+  th {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    text-align: right;
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  tr:nth-child(even) td { background: var(--cream); }
+
+  /* ---------- BUSINESS IMPACT ---------- */
+  .impact-box {
+    border: 2px solid var(--ink);
+    padding: 22px 26px;
+    margin: 20px 0;
+    background: #fefcf6;
+    page-break-inside: avoid;
+  }
+  .impact-box .impact-title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .impact-box .impact-title::before {
+    content: "★";
+    color: var(--accent);
+    font-size: 1.3rem;
+  }
+
+  /* ---------- INLINE CODE ---------- */
+  code {
+    font-family: 'Courier New', monospace;
+    background: var(--code-bg);
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    color: var(--danger);
+    direction: ltr;
+    display: inline-block;
+  }
+
+  /* ---------- METRIC PILL ---------- */
+  .metric-row {
+    display: flex;
+    gap: 14px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .metric {
+    flex: 1;
+    min-width: 140px;
+    border: 1px solid var(--rule);
+    padding: 14px 18px;
+    border-radius: 6px;
+    text-align: center;
+    background: var(--paper);
+  }
+  .metric .value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1.2;
+  }
+  .metric .label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+    display: block;
+  }
+  .metric.danger .value { color: #c2410c; }
+  .metric.warn .value { color: #b45309; }
+  .metric.ok .value { color: #166534; }
+
+  /* ---------- STATUS BADGE ---------- */
+  .status {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .status.red { background: #fee2e2; color: #991b1b; }
+  .status.green { background: #dcfce7; color: #166534; }
+  .status.yellow { background: #fef3c7; color: #92400e; }
+
+  /* ---------- FOOTER ---------- */
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 2px solid var(--ink);
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ---------- PRINT RULES ---------- */
+  @media print {
+    html { font-size: 11pt; }
+    body { background: white; }
+    .page {
+      box-shadow: none;
+      padding: 0;
+      max-width: 100%;
+    }
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    section { page-break-inside: auto; }
+    h2, h3 { page-break-after: avoid; }
+    .figure, .analysis, .impact-box, .feature { page-break-inside: avoid; break-inside: avoid; }
+    .figure img { max-height: 90vh; object-fit: contain; }
+
+    section > h2 + p, section > h2 + .intro-box { page-break-before: avoid; }
+
+    .cover { page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+
+
+
+  <!-- ========== SECTION 1: WHAT IS GRAFANA ========== -->
+  <section>
+    <h2><span class="num">۰۱</span> Grafana چیست؟</h2>
+
+    <div class="intro-box">
+      <p>
+        <strong>Grafana یک پلتفرم مصورسازی و پایش لحظه‌ای (Real-time Monitoring & Visualization) است</strong>
+        که داده‌های پراکنده از سرورها، دیتابیس‌ها، کش، شبکه و حتی ابزارهای کسب‌وکار را
+        در قالب نمودارها، گیج‌ها و اعداد قابل‌فهم، روی یک صفحه واحد جمع می‌کند.
+      </p>
+    </div>
+
+    <p>
+      تفاوت Grafana با Sentry در چیست؟ Sentry به سؤال «<strong>چه باگی</strong> در کد رخ داد؟»
+      پاسخ می‌دهد. Grafana به سؤال «<strong>زیرساخت من الان چه حالی دارد؟</strong>» پاسخ می‌دهد —
+      آیا سرور پر شده؟ آیا دیتابیس کند است؟ آیا حافظه دارد تمام می‌شود؟ آیا ترافیک ناگهان جهش کرده؟
+      این دو ابزار مکمل یکدیگرند، نه جایگزین.
+    </p>
+
+    <p>
+      یک تشبیه ساده: Grafana داشبورد خودرو شماست. سرعت‌سنج، دماسنج، چراغ هشدار بنزین.
+      وقتی همه چیز سبز است یعنی سفر آرام؛ وقتی چراغ قرمز روشن شد، باید قبل از خرابی اقدام کنید.
+      <strong>هدف اصلی Grafana جلوگیری از خرابی است، نه تحلیل خرابی بعد از وقوع.</strong>
+    </p>
+
+    <h3>چرا یک صاحب کسب‌وکار باید به Grafana اهمیت بدهد؟</h3>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="label">۰۱ · پیشگیری از Downtime</span>
+        <div class="title">دیدن مشکل قبل از خرابی</div>
+        <div class="desc">
+          هر ساعت قطعی سایت در یک کسب‌وکار آنلاین متوسط می‌تواند ده‌ها میلیون تومان ضرر داشته باشد.
+          Grafana علائم هشدار (RAM پر، دیسک تمام، کوئری کند) را قبل از سقوط نشان می‌دهد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۲ · بهینه‌سازی هزینه سرور</span>
+        <div class="title">پرداخت برای منابع واقعی</div>
+        <div class="desc">
+          خیلی از کسب‌وکارها سرور بزرگ‌تر از نیاز می‌خرند چون نمی‌دانند چقدر مصرف می‌کنند.
+          Grafana نشان می‌دهد منابع واقعاً چقدر استفاده می‌شوند و کجا می‌توان صرفه‌جویی کرد.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۳ · شفافیت برای مدیریت</span>
+        <div class="title">یک تصویر برای کل تیم</div>
+        <div class="desc">
+          مدیر، CTO، تیم فنی و حتی پشتیبانی همگی یک منبع حقیقت دارند.
+          گفت‌وگوهای «سایت کنده» در برابر «نه، سرور سالم است» با یک نگاه به داشبورد حل می‌شود.
+        </div>
+      </div>
+      <div class="feature">
+        <span class="label">۰۴ · پاسخ سریع‌تر</span>
+        <div class="title">کاهش زمان حل مشکل</div>
+        <div class="desc">
+          وقتی مشکلی پیش می‌آید، تیم در چند ثانیه می‌تواند ببیند مشکل از سرور است،
+          از دیتابیس، از کش یا از سرویس‌های خارجی. این یعنی ساعت‌ها صرفه‌جویی در هر حادثه.
+        </div>
+      </div>
+    </div>
+
+    <h3>قابلیت‌های اصلی Grafana</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 28%;">قابلیت</th>
+          <th>ارزش برای کسب‌وکار</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Multi-source Dashboards</strong></td>
+          <td>اتصال هم‌زمان به MySQL، Redis، Prometheus،  و ده‌ها منبع دیگر</td>
+        </tr>
+        <tr>
+          <td><strong>Real-time Refresh</strong></td>
+          <td>به‌روزرسانی خودکار داده‌ها (در این داشبورد هر ۳۰ ثانیه)</td>
+        </tr>
+        <tr>
+          <td><strong>Time Range Selector</strong></td>
+          <td>تغییر بازه از ۱۵ دقیقه تا ۹۰ روز، برای دیدن روند طولانی‌مدت یا مشکل لحظه‌ای</td>
+        </tr>
+        <tr>
+          <td><strong>Sharing & Export</strong></td>
+          <td>اشتراک‌گذاری داشبورد یا تک‌پنل با مدیران، یا گرفتن snapshot برای گزارش</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ========== SECTION 2: DASHBOARD ANALYSIS ========== -->
+  <section>
+    <h2><span class="num">۰۲</span> تحلیل داشبورد · Eghamat24 Dashboard Enhanced</h2>
+
+    <p>
+      این داشبورد جامع، چهار حوزه اصلی زیرساخت را در یک نگاه پایش می‌کند:
+      <strong>GitLab</strong>، <strong>System</strong>، <strong>DataBase</strong> و <strong>Cache System</strong>.
+      هر بخش با Section Header قابل بازشدن/بستن سازماندهی شده تا تیم بتواند روی حوزه‌ای
+      که نیاز دارد تمرکز کند.
+    </p>
+
+    <figure class="figure">
+      <img src="Graphena.png" alt="داشبورد Grafana پروژه Eghamat24">
+      <figcaption><strong>تصویر ۱.</strong> داشبورد یکپارچه پایش زیرساخت در Grafana</figcaption>
+    </figure>
+
+    <h3>الف) بخش System · سلامت سرور</h3>
+
+    <div class="metric-row">
+      <div class="metric ok">
+        <span class="value">10.8%</span>
+        <span class="label">CPU / Sys Load</span>
+      </div>
+      <div class="metric warn">
+        <span class="value">63.3%</span>
+        <span class="label">RAM</span>
+      </div>
+      <div class="metric danger">
+        <span class="value">77.5%</span>
+        <span class="label">SWAP</span>
+      </div>
+      <div class="metric ok">
+        <span class="value">60.9%</span>
+        <span class="label">Root Disk</span>
+      </div>
+    </div>
+
+    <h3>ب) بخش DataBase · سلامت MySQL</h3>
+
+    <div class="metric-row">
+      <div class="metric">
+        <span class="value">197</span>
+        <span class="label">Current QPS</span>
+      </div>
+      <div class="metric">
+        <span class="value">31</span>
+        <span class="label">Connections</span>
+      </div>
+      <div class="metric ok">
+        <span class="value">0</span>
+        <span class="label">Slow Queries</span>
+      </div>
+      <div class="metric ok">
+        <span class="value">0</span>
+        <span class="label">Aborted Conn.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 3: GRAFANA VS SENTRY ========== -->
+  <section>
+    <h2><span class="num">۰۳</span> Grafana در کنار Sentry · چرا هر دو لازم‌اند؟</h2>
+
+    <p>
+      اگر گزارش قبلی Sentry را خوانده‌اید، ممکن است این سؤال پیش بیاید: «خب، با Sentry که خطاها
+      را می‌بینیم، چرا به Grafana هم نیاز داریم؟»
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">معیار</th>
+          <th>Sentry</th>
+          <th>Grafana</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>سؤال اصلی</strong></td>
+          <td>چه باگی در کد رخ داد؟</td>
+          <td>زیرساخت من چه حالی دارد؟</td>
+        </tr>
+        <tr>
+          <td><strong>زمان واکنش</strong></td>
+          <td>پس از وقوع خطا</td>
+          <td>قبل از وقوع خطا (پیشگیرانه)</td>
+        </tr>
+        <tr>
+          <td><strong>حوزه پوشش</strong></td>
+          <td>کد اپلیکیشن (Backend, Frontend, Mobile)</td>
+          <td>سرور، دیتابیس، کش، شبکه، DevOps</td>
+        </tr>
+        <tr>
+          <td><strong>مخاطب اصلی</strong></td>
+          <td>توسعه‌دهندگان</td>
+          <td>DevOps + SRE + مدیر فنی</td>
+        </tr>
+        <tr>
+          <td><strong>سطح جزئیات</strong></td>
+          <td>Stack trace و کد دقیق</td>
+          <td>متریک‌های عددی و روندها</td>
+        </tr>
+        <tr>
+          <td><strong>هدف نهایی</strong></td>
+          <td>رفع باگ</td>
+          <td>پیش‌بینی و پیشگیری</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="intro-box">
+      <p>
+        <strong>یک سناریوی واقعی:</strong> کاربر شکایت می‌کند که سایت کند است.
+      </p>
+      <p>
+        <strong>۱.</strong> به Grafana نگاه می‌کنید: می‌بینید SWAP پر شده و QPS دیتابیس
+        ناگهان دو برابر شده. مشکل در زیرساخت است.
+      </p>
+      <p>
+        <strong>۲.</strong> به Sentry نگاه می‌کنید: می‌بینید یک N+1 Query در یک Job جدید
+        رخ داده که هزاران کوئری اضافه می‌سازد.
+      </p>
+      <p>
+        Grafana گفت <strong>کجا</strong> و Sentry گفت <strong>چرا</strong>. ترکیب این دو،
+        مشکلی که می‌توانست ساعت‌ها طول بکشد را در دقایق حل می‌کند.
+      </p>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
