@@ -1,3 +1,4 @@
+```mermaid
 %%{init: {
 "theme": "base",
 "themeVariables": {
@@ -53,3 +54,4 @@ participant CC as 📞 Call Center
 
     CC->>S: overbooking action
     Note over S: 💬 INSERT activity #4001<br/>type: comment · template_id: 3 · snapshot_id: NULL<br/>"Webhook received from GRS. Searching for alternative."
+```

@@ -1,3 +1,4 @@
+```mermaid
 %%{init: {
 "theme": "base",
 "themeVariables": {
@@ -50,3 +51,4 @@ participant S as ⚙️ System
 
     CC->>S: Mark reservation as worthless
     Note over S: 🔄 UPDATE hotel_reserves #1001<br/>SET is_worthless = true<br/>📸 INSERT snapshot #5007<br/>🎬 INSERT activity #4002<br/>type: action · template_id: NULL · snapshot_id: 5007<br/>"Created during load testing. Excluded from reports."
+```

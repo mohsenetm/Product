@@ -1,3 +1,4 @@
+```mermaid
 %%{init: {
 "theme": "base",
 "themeVariables": {
@@ -48,3 +49,4 @@ participant P as 🏨 Provider (GRS)
 
     S-->>CC: ✅ Cancelled — refund: 18,000,000 Rials
     CC-->>G: Cancellation confirmed · refund initiated
+```

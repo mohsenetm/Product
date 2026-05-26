@@ -1,3 +1,4 @@
+```mermaid
 %%{init: {
 "theme": "base",
 "themeVariables": {
@@ -46,3 +47,4 @@ participant CC as 📞 Call Center
 
     CC->>S: Review rejection — log comment
     Note over S: 💬 INSERT activity #4001<br/>type: comment · template_id: 1 · snapshot_id: NULL<br/>"Provider returned ROOM_NOT_AVAILABLE. Guest will be contacted."
+```

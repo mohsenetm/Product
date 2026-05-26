@@ -1,3 +1,4 @@
+```mermaid
 %%{init: {
 "theme": "base",
 "themeVariables": {
@@ -49,3 +50,4 @@ participant S as ⚙️ System
     Note over S: 💬 INSERT activity #4003<br/>type: comment · template_id: 1 · snapshot_id: NULL · users_id: 9<br/>"Third attempt at 16:20. Guest answered briefly then call dropped."
 
     Note over S: 📊 Final state: hotel_reserve_activities → 3 rows<br/>All other tables: unchanged
+```
