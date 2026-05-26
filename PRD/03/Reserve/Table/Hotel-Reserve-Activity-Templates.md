@@ -13,22 +13,22 @@
 
 ## ستون‌ها
 
-| نام ستون     | نوع داده         | Null | کلید |
-| :----------- | :--------------- | :--- | :--- |
-| `id`         | bigint unsigned  | خیر  | PRI  |
-| `title`      | varchar(255)     | خیر  |      |
-| `body`       | text             | بله  |      |
-| `type`       | enum             | خیر  |      |
-| `order`      | tinyint unsigned | خیر  |      |
-| `is_active`  | tinyint(1)       | خیر  |      |
-| `created_at` | timestamp        | بله  |      |
-| `updated_at` | timestamp        | بله  |      |
+| نام ستون     | نوع داده         |
+| :----------- | :--------------- |
+| `id`         | bigint unsigned  |
+| `title`      | varchar(255)     |
+| `body`       | text             |
+| `type`       | enum             |
+| `order`      | tinyint unsigned |
+| `is_active`  | tinyint(1)       |
+| `created_at` | timestamp        |
+| `updated_at` | timestamp        |
 
 ## روابط
 
-| رابطه | جدول | ستون کلید خارجی | نوع |
-| :--- | :--- | :--- | :--- |
-| ارجاع شده توسط (referenced by) | `hotel_reserve_activities` | `template_id` | یک به چند (One → Many) |
+| رابطه                          | جدول                       | ستون کلید خارجی |
+| :----------------------------- | :------------------------- | :-------------- |
+| ارجاع شده توسط (referenced by) | `hotel_reserve_activities` | `template_id`   |
 
 ## داده‌های نمونه (Seed Data)
 

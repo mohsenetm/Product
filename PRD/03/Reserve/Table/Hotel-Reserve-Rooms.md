@@ -17,23 +17,23 @@ $$ \text{hotel\_reserves.price} = \sum(\text{hotel\_reserve\_rooms.price}) $$
 
 ## ستون‌ها
 
-| نام ستون             | نوع داده         | Null |
-| :------------------- | :--------------- | :--- |
-| `id`                 | bigint unsigned  | خیر  |
-| `reserve_id`         | bigint unsigned  | خیر  |
-| `room_type_id`       | bigint unsigned  | خیر  |
-| `rate_plan_id`       | bigint unsigned  | بله  |
-| `room_type_snapshot` | json             | خیر  |
-| `rate_plan_snapshot` | json             | خیر  |
-| `number_of_adults`   | tinyint unsigned | خیر  |
-| `number_of_children` | tinyint unsigned | خیر  |
-| `price`              | bigint unsigned  | خیر  |
-| `purchase_price`     | bigint unsigned  | خیر  |
-| `sales_price`        | bigint unsigned  | خیر  |
-| `board_price`        | bigint unsigned  | خیر  |
-| `discount`           | bigint unsigned  | خیر  |
-| `created_at`         | timestamp        | بله  |
-| `updated_at`         | timestamp        | بله  |
+| نام ستون             | نوع داده         |
+| :------------------- | :--------------- |
+| `id`                 | bigint unsigned  |
+| `reserve_id`         | bigint unsigned  |
+| `room_type_id`       | bigint unsigned  |
+| `rate_plan_id`       | bigint unsigned  |
+| `room_type_snapshot` | json             |
+| `rate_plan_snapshot` | json             |
+| `number_of_adults`   | tinyint unsigned |
+| `number_of_children` | tinyint unsigned |
+| `price`              | bigint unsigned  |
+| `purchase_price`     | bigint unsigned  |
+| `sales_price`        | bigint unsigned  |
+| `board_price`        | bigint unsigned  |
+| `discount`           | bigint unsigned  |
+| `created_at`         | timestamp        |
+| `updated_at`         | timestamp        |
 
 ## روابط
 

@@ -18,26 +18,26 @@
 
 ## ستون‌ها
 
-| نام ستون           | نوع داده         | Null |
-| :----------------- | :--------------- | :--- |
-| `id`               | bigint unsigned  | خیر  |
-| `reserve_id`       | bigint unsigned  | خیر  |
-| `check_in`         | date             | خیر  |
-| `check_out`        | date             | خیر  |
-| `number_of_nights` | tinyint unsigned | خیر  |
-| `first_name`       | varchar(255)     | خیر  |
-| `last_name`        | varchar(255)     | خیر  |
-| `phone`            | varchar(255)     | خیر  |
-| `email`            | varchar(255)     | بله  |
-| `status`           | enum             | خیر  |
-| `is_worthless`     | tinyint(1)       | خیر  |
-| `price`            | bigint unsigned  | خیر  |
-| `purchase_price`   | bigint unsigned  | خیر  |
-| `sales_price`      | bigint unsigned  | خیر  |
-| `board_price`      | bigint unsigned  | خیر  |
-| `discount`         | bigint unsigned  | خیر  |
-| `expired_at`       | timestamp        | بله  |
-| `created_at`       | timestamp        | خیر  |
+| نام ستون           | نوع داده         |
+| :----------------- | :--------------- |
+| `id`               | bigint unsigned  |
+| `reserve_id`       | bigint unsigned  |
+| `check_in`         | date             |
+| `check_out`        | date             |
+| `number_of_nights` | tinyint unsigned |
+| `first_name`       | varchar(255)     |
+| `last_name`        | varchar(255)     |
+| `phone`            | varchar(255)     |
+| `email`            | varchar(255)     |
+| `status`           | enum             |
+| `is_worthless`     | tinyint(1)       |
+| `price`            | bigint unsigned  |
+| `purchase_price`   | bigint unsigned  |
+| `sales_price`      | bigint unsigned  |
+| `board_price`      | bigint unsigned  |
+| `discount`         | bigint unsigned  |
+| `expired_at`       | timestamp        |
+| `created_at`       | timestamp        |
 
 ## روابط
 
@@ -46,48 +46,3 @@
 | belongs to (متعلق به)          | `hotel_reserves`                      | `reserve_id`    |
 | referenced by (ارجاع شده توسط) | `hotel_reserve_provider_transactions` | `snapshot_id`   |
 | referenced by (ارجاع شده توسط) | `hotel_reserve_activities`            | `snapshot_id`   |
-
-# مستندات جدول `hotel_reserve_room_availabilities`
-
-## توضیحات
-
-یک اسنپ‌شات (تصویر لحظه‌ای) به ازای هر شب و هر اتاق از شرایط قیمت‌گذاری و ظرفیت (availability) که در لحظه رزرو ثبت شده است.  
-برای **هر شب** از **هر اتاق رزرو شده** یک سطر ایجاد می‌شود که ریزترین سطح (lowest-granularity) رکورد قیمت‌گذاری را در سیستم تشکیل می‌دهد.
-
-> **مثال:** یک رزرو ۳ شبه با ۲ اتاق → **۶ سطر** ($2 \text{ اتاق} \times 3 \text{ شب}$)
-
-## تصمیمات طراحی
-
-- **فقط-افزودنی (Append-only)** — فقط دارای `created_at` (تنظیم شده از طریق `useCurrent()`). این سطرها هرگز بروزرسانی نمی‌شوند؛ آن‌ها نشان‌دهنده نرخ‌های روزانه دقیقی هستند که به مهمان پیشنهاد شده است.
-- ذخیره نرخ‌های روزانه (per-day rates)، گزارش‌گیری دقیق درآمد، حسابرسی به ازای هر شب و محاسبات بازپرداخت (refund) در آینده را امکان‌پذیر می‌کند.
-
-## ستون‌ها
-
-| نام ستون                | نوع داده        | Null | کلید |
-| :---------------------- | :-------------- | :--- | :--- |
-| `id`                    | bigint unsigned | خیر  | PRI  |
-| `reserve_room_id`       | bigint unsigned | خیر  | MUL  |
-| `available_day`         | date            | خیر  |      |
-| `inventory`             | int unsigned    | خیر  |      |
-| `rack_rate`             | int unsigned    | خیر  |      |
-| `daily_rate`            | int unsigned    | خیر  |      |
-| `sell_rate`             | int unsigned    | خیر  |      |
-| `baby_rack_rate`        | int unsigned    | خیر  |      |
-| `baby_daily_rate`       | int unsigned    | خیر  |      |
-| `baby_sell_rate`        | int unsigned    | خیر  |      |
-| `extend_bed_rack_rate`  | int unsigned    | خیر  |      |
-| `extend_bed_daily_rate` | int unsigned    | خیر  |      |
-| `extend_bed_sell_rate`  | int unsigned    | خیر  |      |
-| `reservation_state`     | enum            | خیر  |      |
-| `available_type`        | enum            | خیر  |      |
-| `close_to_arrival`      | tinyint(1)      | خیر  |      |
-| `close_to_departure`    | tinyint(1)      | خیر  |      |
-| `closed`                | tinyint(1)      | خیر  |      |
-| `min_stay`              | int unsigned    | بله  |      |
-| `max_stay`              | int unsigned    | بله  |      |
-| `created_at`            | timestamp       | خیر  |      |
-## روابط
-
-| رابطه | جدول | ستون کلید خارجی | نوع |
-| :--- | :--- | :--- | :--- |
-| متعلق است به (belongs to) | `hotel_reserve_rooms` | `reserve_room_id` | چند به یک (Many → One) |

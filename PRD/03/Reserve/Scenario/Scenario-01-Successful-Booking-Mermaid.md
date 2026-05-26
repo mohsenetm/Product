@@ -1,3 +1,4 @@
+```mermaid
 %%{init: {
 "theme": "base",
 "themeVariables": {
@@ -51,3 +52,4 @@ participant Pay as 💳 Payment
     Note over S: 🔄 UPDATE status → confirmed<br/>📸 INSERT snapshot #5005<br/>📋 INSERT provider_transaction #2
 
     S-->>G: 🎉 Booking confirmed!
+```

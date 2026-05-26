@@ -15,22 +15,22 @@
 
 ## ستون‌ها
 
-| نام ستون      | نوع داده        | Null | کلید |
-| :------------ | :-------------- | :--- | :--- |
-| `id`          | bigint unsigned | خیر  | PRI  |
-| `reserve_id`  | bigint unsigned | خیر  | MUL  |
-| `snapshot_id` | bigint unsigned | بله  | MUL  |
-| `users_id`    | bigint unsigned | خیر  | MUL  |
-| `template_id` | bigint unsigned | بله  | MUL  |
-| `type`        | enum            | خیر  |      |
-| `title`       | varchar(255)    | خیر  |      |
-| `description` | text            | خیر  |      |
-| `created_at`  | timestamp       | خیر  |      |
+| نام ستون      | نوع داده        |
+| :------------ | :-------------- |
+| `id`          | bigint unsigned |
+| `reserve_id`  | bigint unsigned |
+| `snapshot_id` | bigint unsigned |
+| `users_id`    | bigint unsigned |
+| `template_id` | bigint unsigned |
+| `type`        | enum            |
+| `title`       | varchar(255)    |
+| `description` | text            |
+| `created_at`  | timestamp       |
 ## روابط
 
-| رابطه | جدول | ستون کلید خارجی | نوع |
-| :--- | :--- | :--- | :--- |
-| belongs to (متعلق به) | `hotel_reserves` | `reserve_id` | چند به یک (Many → One) |
-| belongs to (متعلق به) | `hotel_reserve_snapshots` | `snapshot_id` | چند به یک (Many → One) |
-| belongs to (متعلق به) | `users` | `users_id` | چند به یک (Many → One) |
-| belongs to (متعلق به) | `hotel_reserve_activity_templates` | `template_id` | چند به یک (Many → One) |
+| رابطه                 | جدول                               | ستون کلید خارجی |
+| :-------------------- | :--------------------------------- | :-------------- |
+| belongs to (متعلق به) | `hotel_reserves`                   | `reserve_id`    |
+| belongs to (متعلق به) | `hotel_reserve_snapshots`          | `snapshot_id`   |
+| belongs to (متعلق به) | `users`                            | `users_id`      |
+| belongs to (متعلق به) | `hotel_reserve_activity_templates` | `template_id`   |

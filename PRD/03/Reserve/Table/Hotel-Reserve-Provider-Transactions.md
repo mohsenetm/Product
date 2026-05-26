@@ -15,19 +15,19 @@
 
 ## ستون‌ها
 
-| نام ستون                     | نوع داده        | Null | کلید |
-| :--------------------------- | :-------------- | :--- | :--- |
-| `id`                         | bigint unsigned | خیر  | PRI  |
-| `reserve_id`                 | bigint unsigned | خیر  | MUL  |
-| `snapshot_id`                | bigint unsigned | بله  | MUL  |
-| `provider_id`                | bigint unsigned | خیر  | MUL  |
-| `status`                     | varchar(255)    | بله  |      |
-| `provider_confirmation_code` | varchar(255)    | بله  | MUL  |
-| `is_success`                 | tinyint(1)      | خیر  |      |
-| `error_message`              | text            | بله  |      |
-| `request_payload`            | json            | بله  |      |
-| `response_payload`           | json            | بله  |      |
-| `created_at`                 | timestamp       | خیر  |      |
+| نام ستون                     | نوع داده        |
+| :--------------------------- | :-------------- |
+| `id`                         | bigint unsigned |
+| `reserve_id`                 | bigint unsigned |
+| `snapshot_id`                | bigint unsigned |
+| `provider_id`                | bigint unsigned |
+| `status`                     | varchar(255)    |
+| `provider_confirmation_code` | varchar(255)    |
+| `is_success`                 | tinyint(1)      |
+| `error_message`              | text            |
+| `request_payload`            | json            |
+| `response_payload`           | json            |
+| `created_at`                 | timestamp       |
 
 
 
